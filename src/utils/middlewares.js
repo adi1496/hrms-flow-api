@@ -1,6 +1,6 @@
 
 exports.bodyParser = async(req, res, next) => {
-    console.log(req.method, req.headers);
+    // console.log(req.method, req.headers);
     const isPostPatch = req.method === 'POST' || req.method === 'PATCH';
     if(isPostPatch){
         if(req.headers['content-type'] === 'application/json'){

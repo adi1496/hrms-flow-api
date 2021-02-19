@@ -1,12 +1,23 @@
+const { ObjectId } = require('bson');
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
+    company: {
+        type: ObjectId,
+        ref: 'Companies'
+    },
     employeeID: {
         type: String,
         required: [true, 'Please provide employee ID'],
     },
-    designation: {
+    position: {
         type: String
+    },
+    salaryGross: {
+        type: Number
+    },
+    salaryNet: {
+        type: Number
     },
     joiningDate: {
         type: Date
@@ -26,14 +37,17 @@ const userSchema = new mongoose.Schema({
     dateOfBirth: {
         type: Date,
     },
+    userRole: {
+        type: String,
+        enum: ['employee', 'admin', 'hr-manager', 'recruiter']
+    },
     gender: {
-        required: [true, 'Please provide gender'],
+        // required: [true, 'Please provide gender'],
         type: String,
         enum: ['male', 'female']
     },
     maritalStatus: {
         type: String,
-        required: true,
         enum: ['single', 'married', 'separated', 'divorced']
     },
     title: {
@@ -42,33 +56,33 @@ const userSchema = new mongoose.Schema({
     },
     fatherName: {
         type: String,
-        required: [true, 'Please provide your father\'s name'],
+        // required: [true, 'Please provide your father\'s name'],
         maxlength: [50, 'Father\'s name should be maximun 50 chars'],
         trim: true
     },
     nationality: {
         type: String,
-        required: [true, 'Please provide nationality'],
+        // required: [true, 'Please provide nationality'],
     },
     country: {
         type: String,
-        required: [true, 'Please provide country'],
+        // required: [true, 'Please provide country'],
     },
     city: {
         type: String,
-        required: [true, 'Please provide city'],
+        // required: [true, 'Please provide city'],
     },
     postalCode: {
         type: String,
     },
     address: {
         type: String,
-        required: [true, 'Please provide address'],
+        // required: [true, 'Please provide address'],
     },
     mobile: {
         type: String,
         trim: true,
-        required: [true, 'Please provide mobile phone'],
+        // required: [true, 'Please provide mobile phone'],
     },
     phone: {
         type: String,
@@ -113,6 +127,6 @@ const userSchema = new mongoose.Schema({
 });
 
 
-const Model = mongoose.model('User', userSchema);
+// const Model = mongoose.model('User', userSchema);
 
-module.exports = Model;
+module.exports = userSchema;
