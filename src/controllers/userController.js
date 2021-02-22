@@ -7,17 +7,20 @@ const createUserThatRegisterCompany = async (req, res, next) => {
         const companyID = req.company.companyID;
 
         const data = {
-            employeeID: Date.now(),
+            employeeID: Date.now(), // temporary
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             company: req.company._id,
             email: req.body.businessEmail,
             mobile: req.body.businessPhone,
             position: req.body.jobTitle,
+            userRole: 'admin'
         }
 
         const User = mongoose.model(companyID, userSchema);
         const newUser = await User.create(data);
+        // review this
+        newUser.createTokenForEmailValidateAndPasswordCreate();
 
         if(!newUser) return next();
 

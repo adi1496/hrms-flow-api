@@ -1,9 +1,12 @@
-const { ObjectId } = require('bson');
+const crypto = require('crypto');
+
 const mongoose = require('mongoose');
+
+const functions = require('./../utils/functions');
 
 const userSchema = new mongoose.Schema({
     company: {
-        type: ObjectId,
+        type: mongoose.ObjectId,
         ref: 'Companies'
     },
     employeeID: {
@@ -123,9 +126,35 @@ const userSchema = new mongoose.Schema({
     },
     status: {
         type: String
+    },
+    // isNew: {
+    //     type: Boolean,
+    //     default: true,
+    // },
+    emailConfirmed: {
+        type: Boolean,
+        default: false
+    },
+    emailAndPasswordToken: {
+        type: String,
     }
 });
 
+
+userSchema.pre('save', function(next) {
+    if(this.isNew){
+        
+    }
+})
+
+// review this 
+userSchema.methods.createTokenForEmailValidateAndPasswordCreate = () => {
+    const randomStr = functions.createRandomChars(32);
+
+    const hash = crypto.createHash('sha256').update(randomStr).digest('hex');
+    // this.emailAndPasswordToken = hash;
+    console.log(this);
+}
 
 // const Model = mongoose.model('User', userSchema);
 
