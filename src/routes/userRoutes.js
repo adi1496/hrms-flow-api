@@ -7,9 +7,11 @@ const router = express.Router();
 
 router.route('/')
 .get(userController.getAllUsers)
-.post(userController.createNewUser)
+.post(authController.isLoggedIn, userController.createNewUser)
 .patch();
 
-router.route('/signup-company').post(authController.signupCompany, userController.createNewUser);
+router.route('/signup-company').post(authController.signupCompany, authController.signUpUserThatRegisterCompany);
+
+// authController.signUpUserThatRegisterCompany
 
 module.exports = router;

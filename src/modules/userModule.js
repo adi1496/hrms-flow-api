@@ -98,6 +98,13 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    password: {
+        type: String,
+        minlength: [8, 'Password should be at least 8 characters long'],
+    },
+    confirmPassword: {
+        type: String,
+    },
     photo: {
         type: String,
     },
@@ -135,25 +142,31 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    emailAndPasswordToken: {
+    emailVerificationToken: {
         type: String,
     }
 });
 
 
 userSchema.pre('save', function(next) {
+    console.log(`Is new?: ${this.isNew}`);
     if(this.isNew){
-        
+        if(this.password === this.confirmPassword) {
+            this.confirmPassword = undefined;
+        }
     }
+
+    next();
 })
 
 // review this 
-userSchema.methods.createTokenForEmailValidateAndPasswordCreate = () => {
+userSchema.methods.createEmailVerificationToken = function() {
     const randomStr = functions.createRandomChars(32);
 
     const hash = crypto.createHash('sha256').update(randomStr).digest('hex');
-    // this.emailAndPasswordToken = hash;
-    console.log(this);
+    this.emailVerificationToken = hash;
+
+    return randomStr;
 }
 
 // const Model = mongoose.model('User', userSchema);

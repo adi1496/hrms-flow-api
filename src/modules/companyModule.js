@@ -32,7 +32,7 @@ const companySchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please provide company name'],
     },
-    companyID: {
+    companyId: {
         type: String,
         unique: [true, 'The company ID should be unique'],
         // required: [true, 'Please provide company name'],
@@ -54,10 +54,6 @@ const companySchema = new mongoose.Schema({
 });
 
 companySchema.pre('save', function(next) {
-    // create and set the companyID
-    const name = this.companyName.toLowerCase().split(' ');
-    this.companyID = `${name.join('-')}${Date.now()}`;
-    
     // set the createdAt propery
     this.createdAt = new Date();
     next();

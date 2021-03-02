@@ -1,20 +1,9 @@
 exports.createRandomChars = (size) => {
-    let charsNumbers = [33, 57];
-    let letters = [65, 122];
-    let asciiArray = [];
+    const bytesList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
     let randomChars = [];
 
-    const createAsciiArray = (array) => {
-        for (let i = array[0]; i <= array[1]; i++) {
-            asciiArray.push(i);
-        }
-    };
-
-    createAsciiArray(charsNumbers);
-    createAsciiArray(letters);
-
     for (let i = 0; i < size; i++) {
-        randomChars.push(String.fromCharCode(asciiArray[Math.floor(Math.random() * (asciiArray.length - 1))]));
+        randomChars.push(bytesList[Math.floor(Math.random() * (bytesList.length - 1))]);
     }
 
     return randomChars.join('');

@@ -1,13 +1,24 @@
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
 const app = require('./app');
+const { param } = require('./routes/userRoutes');
+const { path } = require('./modules/userModule');
 
-const port = 3000;
+dotenv.config({path: `${__dirname}/.config.env`});
+
+const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
     console.log(`The app is listening on port ${port}`);
 });
 
-const DB = 'mongodb://localhost:27017/hrms-flow';
+let DB;
+if(process.env.NODE_ENV === 'production') {
+    DB = process.env.LOCAL_DB // change this after finish the app
+}else {
+    DB = process.env.LOCAL_DB
+}
+
 mongoose.connect(DB, {  
     useNewUrlParser: true,
     useCreateIndex: true,
