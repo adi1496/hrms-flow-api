@@ -5,9 +5,12 @@ const mongoose = require('mongoose');
 const functions = require('./../utils/functions');
 
 const userSchema = new mongoose.Schema({
-    company: {
+    companyId: {
         type: mongoose.ObjectId,
         ref: 'Companies'
+    },
+    companyCollectionName: {
+        type: String,
     },
     employeeID: {
         type: String,
@@ -134,10 +137,10 @@ const userSchema = new mongoose.Schema({
     status: {
         type: String
     },
-    // isNew: {
-    //     type: Boolean,
-    //     default: true,
-    // },
+    isActive: {
+        type: Boolean,
+        default: true,
+    },
     emailConfirmed: {
         type: Boolean,
         default: false
@@ -150,7 +153,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.pre('save', function(next) {
     console.log(`Is new?: ${this.isNew}`);
-    if(this.isNew){
+    if(this.isNew && this.isActive){
         if(this.password === this.confirmPassword) {
             this.confirmPassword = undefined;
         }

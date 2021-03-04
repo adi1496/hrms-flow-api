@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.route('/')
 .get(userController.getAllUsers)
-.post(authController.isLoggedIn, userController.createNewUser)
+.post(authController.isLoggedIn, authController.restrictTo(['admin', 'hr-manager']), userController.createNewUser)
 .patch();
 
 router.route('/signup-company').post(authController.signupCompany, authController.signUpUserThatRegisterCompany);
