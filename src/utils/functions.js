@@ -35,7 +35,7 @@ exports.hasUserRights = (userRole, acceptedRoles) => {
 }
 
 // calculate gross salary when we have the net salary
-// !!!!!!! Revision this function
+// !!!!!!! Revision this function !!!! This is not done yet
 exports.calculateGrossSalary = (salary) => {
     const netSalary = parseInt(salary);
     return netSalary + netSalary * 0.5;

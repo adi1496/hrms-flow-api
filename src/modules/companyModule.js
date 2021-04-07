@@ -1,4 +1,9 @@
+const crypto = require('crypto');
+
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+
+const functions = require('./../utils/functions');
 
 const companySchema = new mongoose.Schema({
     firstName: {
@@ -32,7 +37,7 @@ const companySchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please provide company name'],
     },
-    companyId: {
+    companyCollection: {
         type: String,
         unique: [true, 'The company ID should be unique'],
         // required: [true, 'Please provide company name'],
@@ -49,6 +54,17 @@ const companySchema = new mongoose.Schema({
     city: {
         type: String,
         required: [true, 'Please provide the city'],
+    },
+    postalCode: {
+        type: String,
+    },
+    address: {
+        type: String,
+        // required: [true, 'Please provide address'],
+    },
+    isActive: {
+        type: Boolean,
+        default: true,
     },
     createdAt: Date
 });

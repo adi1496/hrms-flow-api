@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 
-const userSchema = require('./../modules/userModule');
+const userSchema = require('../modules/employeeModule');
+const Company = require('./../modules/companyModule');
 const {calculateGrossSalary} = require('./../utils/functions');
+
 
 exports.createNewUser = async (req, res, next) => {
     try {
@@ -26,8 +28,9 @@ exports.createNewUser = async (req, res, next) => {
         if(!emailVerificationToken) return next('Failed to create email verification token');
         // send email 
         //.. 
-
-
+        
+        console.log(await newUser.populate({path: 'companyId'}));
+        
         //send response
         res.status(200).json({
             status: 'success',
@@ -55,6 +58,26 @@ exports.getAllUsers = async (req, res, next) => {
                 users: users
             }
         })
+    } catch (error) {
+        
+    }
+}
+
+
+exports.getOneUser = async (req, res, next) => {
+    try {
+        const User = mongoose.model(req.companyId, userSchema);
+        console.log(req.params);
+        // const users = await User.findById(req.params.id);
+
+        // if(!users) return next(err);
+
+        // res.status(200).json({
+        //     status: 'success',
+        //     data: {
+        //         users: users
+        //     }
+        // })
     } catch (error) {
         
     }

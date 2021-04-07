@@ -7,10 +7,16 @@ const router = express.Router();
 
 router.route('/')
 .get(userController.getAllUsers)
-.post(authController.isLoggedIn, authController.restrictTo(['admin', 'hr-manager']), userController.createNewUser)
+.post(authController.isLoggedIn,
+    authController.restrictTo(['admin', 'hr-manager']),
+    userController.createNewUser)
 .patch();
 
-router.route('/signup-company').post(authController.signupCompany, authController.signUpUserThatRegisterCompany);
+router.route('/:id')
+.get(authController.isLoggedIn ,authController.restrictTo('admin', 'hr-manager'), userController.getOneUser);
+
+router.route('/signup-company').post(authController.signupCompany);
+router.route('/login').post(authController.login);
 
 // authController.signUpUserThatRegisterCompany
 
