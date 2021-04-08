@@ -9,4 +9,9 @@ const salarySchema = mongoose.Schema({
     toDate: Date
 });
 
+salarySchema.pre('save', function(){
+    if(!this.isNew) return next();
+    if(!this.fromDate) this.fromDate = Date.now();
+});
+
 module.exports = salarySchema;

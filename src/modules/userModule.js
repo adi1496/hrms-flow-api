@@ -61,7 +61,7 @@ const userSchema = new mongoose.Schema({
     },
     passwordChangedAt: Date,
 
-    position: [positionSchema],
+    positions: [positionSchema],
     salaries: [salarySchema],
     hireDate: Date,
 

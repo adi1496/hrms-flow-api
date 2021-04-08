@@ -119,7 +119,7 @@ exports.login = async(req, res, next) => {
 
 // check if user is logged in
 exports.protect = catchAsync(async(req, res, next) => {
-    if(!req.headers.authorization) return next('You are not logged in');
+    if(!req.headers.authorization) return next(new AppError(401, 'You are not logged in'));
     
     let token;
     if(req.headers.authorization.startsWith('Bearer')){

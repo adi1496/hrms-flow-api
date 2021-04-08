@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const functions = require('./../../utils/functions');
+
 const positionSchema = mongoose.Schema({
     positionName: {
         type: String,
@@ -10,8 +12,13 @@ const positionSchema = mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'Deparament'
     },
-    startDate: Date,
-    stopDate: Date
+    fromDate: Date,
+    toDate: Date
+});
+
+positionSchema.pre('save', function() {
+    if(!this.isModified('positionName')) return next();
+    this.slug = functions.createSlug(this.positionName);
 });
 
 module.exports = positionSchema;

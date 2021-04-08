@@ -50,3 +50,36 @@ exports.getDepartmentById = catchAsync(async (req, res, next) => {
     })
 
 });
+
+
+
+
+// Update a departament using id
+exports.updateDepartment = catchAsync(async(req, res, next) => {
+    if(!req.params.id) return next(new AppError(400, 'There are no department in your request'));
+
+    const department = await  Department.findById(req.params.id);
+
+    res.status(404).json({
+        status: 'fail',
+        message: 'not implemented yet'
+    })
+});
+
+
+
+
+// Delete a department
+exports.deleteDepartment = catchAsync(async(req, res, next) => {
+    if(!req.params.id) return next(new AppError(400, 'There are no department in your request'));
+
+    const department = await Department.findById(req.params.id);
+    if(!department) return next(new AppError(404, 'No department with this id'));
+
+    await Department.findByIdAndDelete(req.params.id);
+
+    res.status(204).json({
+        status: 'success',
+        message: 'The department has been deleted'
+    })
+});

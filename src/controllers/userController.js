@@ -1,37 +1,67 @@
 const mongoose = require('mongoose');
 
 const User = require('../modules/userModule');
+const Department = require('./../modules/departamentModule');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
-const Company = require('./../modules/companyModule');
-const {calculateGrossSalary} = require('./../utils/functions');
+const functions = require('./../utils/functions');
 
 
+// create new Employee
 exports.createNewUser = catchAsync(async (req, res, next) => {
-    console.log(req.user);
+    // console.log(req.user);
     if(!req.body) next(new AppError(400, 'There is no body in the request'));
 
-    const userData = req.body;
-    // userData.employeeID = Date.now();
-    // userData.companyId = req.user.companyId;
-    // userData.companyCollectionName = req.user.companyCollection;
+    if(!req.body.department) return next(new AppError(400, 'Please select the department'));
+    if(!req.body.position) return next(new AppError(400, 'Please select the position for new user'));
 
+    const department = await Department.findOne({slug: req.body.department});
+    if(!department) return next(new AppError(400, 'This department does not exists'));
+
+    let positionExists = false;
+    department.positions.forEach(position => {
+        if(position.slug === req.body.position.positionName) {
+            positionExists = true;
+            req.body.position.positionName = position.name
+        }
+    });
+
+    if(positionExists === false) return next(new AppError(400, 'This position does not exists in the database'));
+
+    const userData = req.body;
     userData.hireDate = Date.now();
-    // if(userData.salaryNet) userData.salaryGross = calculateGrossSalary(userData.salaryNet);
     userData.isActive = false; // avoid the pre save middleware about 'password'
-    
-    // this can be set by the admin
     userData.userRole = 'employee';
+
+    const periodDates = functions.setPositionSalaryPeriod(userData.position.fromDate, userData.position.timeMonths);
+    
+    userData.positions = [];
+    userData.salaries = [];
+    userData.positions.push({
+        positionName: userData.position.positionName,
+        fromDate: periodDates.fromDate,
+        toDate: periodDates.toDate
+    });
+
+    userData.salaries.push({
+        salary: userData.salary,
+        fromDate: periodDates.fromDate,
+        toDate: periodDates.toDate
+    });
+
+    delete userData.position;
+    delete userData.salary;
+    delete userData.department;
 
     const newUser = await User.create(userData);
     if(!newUser) return next(new AppError(500, 'The employee was not created'));
 
     const emailVerificationToken =  newUser.createEmailVerificationToken();
     if(!emailVerificationToken) return next(new AppError(500, 'Failed to create email verification token'));
-    // // send email 
-    // //.. 
+    // send email 
+    //.. 
     
-    // //send response
+    //send response
     res.status(200).json({
         status: 'success',
         data: {
@@ -39,7 +69,12 @@ exports.createNewUser = catchAsync(async (req, res, next) => {
             emailVerificationToken
         }
     });
-})
+});
+
+
+
+
+
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
     const users = await User.find();

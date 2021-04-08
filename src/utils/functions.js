@@ -53,3 +53,30 @@ exports.createSlug = (text) => {
     const textSplit = text.split(' ');
     return textSplit.join('-');
 }
+
+
+
+
+
+
+
+
+
+// create Position for employee
+exports.setPositionSalaryPeriod = (fromDate, timeMonths) => {
+    timeMonths = parseInt(timeMonths);
+    if(!fromDate) {
+        fromDate = new Date();
+    }else {
+        fromDate = new Date(fromDate);
+    }
+
+    let toDate;
+    if(timeMonths === 0) {
+        toDate = new Date('1970-01-01');
+    }else {
+        toDate = new Date(new Date().setMonth(fromDate.getMonth() + timeMonths));
+    }
+
+    return {toDate, fromDate};
+}
