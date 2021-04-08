@@ -15,7 +15,7 @@ router.route('/')
 router.route('/:id')
 .get(authController.isLoggedIn ,authController.restrictTo('admin', 'hr-manager'), userController.getOneUser);
 
-router.route('/signup-company').post(authController.signupCompany);
+router.route('/signup-company').post(authController.signupCompany, authController.signUpAdmin);
 router.route('/login').post(authController.login);
 
 // authController.signUpUserThatRegisterCompany
