@@ -40,3 +40,16 @@ exports.calculateGrossSalary = (salary) => {
     const netSalary = parseInt(salary);
     return netSalary + netSalary * 0.5;
 }
+
+
+
+
+
+
+
+// CREATE SLUG
+exports.createSlug = (text) => {
+    text = text.toLowerCase();
+    const textSplit = text.split(' ');
+    return textSplit.join('-');
+}

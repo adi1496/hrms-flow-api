@@ -12,8 +12,11 @@ const server = app.listen(port, () => {
     console.log(`The app is listening on port ${port}`);
 });
 
+// log the node environment
+console.log(process.env.NODE_ENV);
+
 let DB;
-if(process.env.NODE_ENV === 'production') {
+if(process.env.NODE_ENV === 'development') {
     DB = process.env.LOCAL_DB // change this after finish the app
 }else {
     DB = process.env.LOCAL_DB

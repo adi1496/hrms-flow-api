@@ -1,10 +1,20 @@
 const mongoose = require('mongoose');
 
+const functions = require('./../utils/functions');
+
 // NOTE: I could do like this 
-// const positionSchema = mongoose.Schema({
-//     name: String,
-//     slug: String
-// })
+const positionSchema = mongoose.Schema({
+    name: {
+        type: String,
+        required: [true, 'A position must have a name']
+    },
+    slug: String
+});
+
+positionSchema.pre('save', function(){
+    if(!this.isModified('name')) return next();
+    this.slug = functions.createSlug(this.name);
+});
 // psitions: [positionSchema]
 
 const departmentSchema = mongoose.Schema({
@@ -25,9 +35,23 @@ const departmentSchema = mongoose.Schema({
             ref: 'User'
         }
     ],
-    positions: [String],
+    positions: [positionSchema],
     createDate: Date,
 });
+
+// Create the slug when a new department is created
+departmentSchema.pre('save', function(){
+    if(!this.isNew) return next();
+    console.log('Departament is not is not new');
+    this.slug = functions.createSlug(this.name);
+    this.createDate = Date.now();
+});
+
+// update slug if name was edited !!!
+departmentSchema.pre('save', function(){
+    if(!this.isModified('name')) return next();
+    this.slug = functions.createSlug(this.name);
+})
 
 const Model = mongoose.model('Department', departmentSchema);
 

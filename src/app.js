@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
     res.send('Hello There');
 })
 app.use('/api/v1/users', userRouter);
-app.use('/api/v1/departaments', departmentRoutes);
+app.use('/api/v1/departments', departmentRoutes);
 app.use('/platform/v1/taxes', platformRouter);
 
 app.use('*', (req, res) => {
