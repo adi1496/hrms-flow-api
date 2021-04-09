@@ -11,11 +11,13 @@ const positionSchema = mongoose.Schema({
     slug: String
 });
 
-positionSchema.pre('save', function(){
+positionSchema.pre('save', function(next){
     if(!this.isModified('name')) return next();
     this.slug = functions.createSlug(this.name);
+
+    next();
 });
-// psitions: [positionSchema]
+
 
 const departmentSchema = mongoose.Schema({
     name: {
@@ -40,17 +42,21 @@ const departmentSchema = mongoose.Schema({
 });
 
 // Create the slug when a new department is created
-departmentSchema.pre('save', function(){
+departmentSchema.pre('save', function(next){
     if(!this.isNew) return next();
     console.log('Departament is not is not new');
     this.slug = functions.createSlug(this.name);
     this.createDate = Date.now();
+
+    next();
 });
 
 // update slug if name was edited !!!
-departmentSchema.pre('save', function(){
+departmentSchema.pre('save', function(next){
     if(!this.isModified('name')) return next();
     this.slug = functions.createSlug(this.name);
+
+    next();
 })
 
 const Model = mongoose.model('Department', departmentSchema);

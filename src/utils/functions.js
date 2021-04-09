@@ -1,3 +1,5 @@
+const AppError = require('./appError');
+
 const PASSWORD_MIN_LENGTH = 8;
 
 // create random hex characters 
@@ -79,4 +81,39 @@ exports.setPositionSalaryPeriod = (fromDate, timeMonths) => {
     }
 
     return {toDate, fromDate};
+}
+
+
+
+
+
+
+// get attendace details
+exports.getAttendanceMonth = (date, next) => {
+    const monthNamesArray = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const newDate = new Date(date);
+
+    if(newDate instanceof Date && isNaN(newDate)) return {error: "This is not a valid date!"}
+    // console.log(newDate instanceof Date, isNaN(newDate));
+
+    const code = `${newDate.getMonth()}-${newDate.getFullYear()}`;
+    const monthNumber = newDate.getMonth() + 1;
+    const monthName = monthNamesArray[newDate.getMonth()];
+    const year = newDate.getFullYear();
+    const day = newDate.getDate();
+    let hour = newDate.getUTCHours();
+    let minutes = newDate.getMinutes();
+
+    if(minutes < 25 ) minutes = 0;
+    if(minutes >= 25 && minutes < 55 ) minutes = 30;
+    if(minutes >= 55) {
+        hour ++;
+        minutes = 0;
+    }
+
+    if(hour > 23) hour = 0;
+    // console.log(typeof minutes);
+    // console.log(month, day, monthName, hours, minutes);
+
+    return {code, monthNumber, monthName, year, day, hour, minutes};
 }

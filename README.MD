@@ -5,6 +5,7 @@ What is a HRMS: https://www.netsuite.com/portal/resource/articles/human-resource
 
 
 ### Examples
+* demo app: https://icehrm-open.gamonoid.com/login.php?logout=1
 * the best example: https://icehrm.com/icehrm-demo
 * Video1: https://www.youtube.com/watch?v=P44eiDgJDeg
 * Video2: https://www.youtube.com/watch?v=oAhTQe85vS8

@@ -3,6 +3,7 @@ const express = require('express');
 const ownMiddlewares = require('./utils/middlewares');
 const userRouter = require('./routes/userRoutes');
 const departmentRoutes = require('./routes/departamentRoutes');
+const attendaceRoutes = require('./routes/attendanceRoutes');
 const platformRouter = require('./routes/platformRoutes');
 const globlaErrorHandler = require('./controllers/errorController');
 
@@ -15,6 +16,7 @@ app.get('/', (req, res) => {
 })
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/departments', departmentRoutes);
+app.use('/api/v1/attendance', attendaceRoutes);
 app.use('/platform/v1/taxes', platformRouter);
 
 app.use('*', (req, res) => {

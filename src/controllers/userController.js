@@ -56,6 +56,10 @@ exports.createNewUser = catchAsync(async (req, res, next) => {
     const newUser = await User.create(userData);
     if(!newUser) return next(new AppError(500, 'The employee was not created'));
 
+    department.employees.push(newUser._id);
+    department.numberEmployees ++;
+    await department.save({validateBeforeSave: false});
+
     const emailVerificationToken =  newUser.createEmailVerificationToken();
     if(!emailVerificationToken) return next(new AppError(500, 'Failed to create email verification token'));
     // send email 

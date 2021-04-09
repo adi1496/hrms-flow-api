@@ -16,9 +16,11 @@ const positionSchema = mongoose.Schema({
     toDate: Date
 });
 
-positionSchema.pre('save', function() {
+positionSchema.pre('save', function(next) {
     if(!this.isModified('positionName')) return next();
     this.slug = functions.createSlug(this.positionName);
+
+    next();
 });
 
 module.exports = positionSchema;
