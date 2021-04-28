@@ -56,7 +56,7 @@ const companySchema = new mongoose.Schema({
         default: true,
     },
     createdAt: Date
-});
+},{collection: 'company'});
 
 companySchema.pre('save', function(next) {
     // set the createdAt propery
@@ -64,6 +64,7 @@ companySchema.pre('save', function(next) {
     next();
 })
 
-const Model = mongoose.model('Company', companySchema);
+// const Model = mongoose.model('Company', companySchema);
+// module.exports = Model;
 
-module.exports = Model;
+module.exports = companySchema;

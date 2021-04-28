@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 
-const User = require('../modules/userModule');
-const Department = require('./../modules/departamentModule');
+const userSchema = require('../modules/userModule');
+const departmentSchema = require('../modules/userModule');
+// const User = require('../modules/userModule');
+// const Department = require('./../modules/departamentModule');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const functions = require('./../utils/functions');
@@ -10,6 +12,9 @@ const functions = require('./../utils/functions');
 // create new Employee
 exports.createNewUser = catchAsync(async (req, res, next) => {
     // console.log(req.user);
+    const User = req.db.model('User', userSchema);
+    const Department = req.db.model('Department', departmentSchema);
+
     if(!req.body) next(new AppError(400, 'There is no body in the request'));
 
     if(!req.body.department) return next(new AppError(400, 'Please select the department'));
@@ -81,6 +86,8 @@ exports.createNewUser = catchAsync(async (req, res, next) => {
 
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
+    const User = req.db.model('User', userSchema);
+
     const users = await User.find();
     if(!users) return next(new AppError(404, 'No users found!'));
 
@@ -95,15 +102,17 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 });
 
 
-exports.getOneUser = async (req, res, next) => {
-        console.log(req.params);
-        const users = await User.findById(req.params.id);
-        if(!users) return next(new AppError(404, 'There is no user with this Id'));
+exports.getOneUser = catchAsync(async (req, res, next) => {
+    // console.log(req.params);
+    const User = req.db.model('User', userSchema);
 
-        res.status(200).json({
-            status: 'success',
-            data: {
-                users: users
-            }
-        })
-}
+    const users = await User.findById(req.params.id);
+    if(!users) return next(new AppError(404, 'There is no user with this Id'));
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            users: users
+        }
+    })
+});

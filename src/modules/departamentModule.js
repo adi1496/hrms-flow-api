@@ -59,6 +59,7 @@ departmentSchema.pre('save', function(next){
     next();
 })
 
-const Model = mongoose.model('Department', departmentSchema);
+// const Model = mongoose.model('Department', departmentSchema);
+// module.exports = Model;
 
-module.exports = Model;
+module.exports = departmentSchema;

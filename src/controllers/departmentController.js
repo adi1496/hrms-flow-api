@@ -1,10 +1,13 @@
 
-const Department = require('./../modules/departamentModule');
+// const Department = require('./../modules/departamentModule');
+const departmentSchema = require('./../modules/departamentModule');
 const AppError = require('./../utils/appError');
 const catchAsync = require('./../utils/catchAsync');
 
 // create a new department
 exports.createNewDepartment = catchAsync(async (req, res, next) => {
+    const Department = req.db.model('Department', departmentSchema);
+
     const newDepartment = await Department.create(req.body);
     if(!newDepartment) return next(new AppError(400, 'The department was not created'));
 
@@ -22,6 +25,8 @@ exports.createNewDepartment = catchAsync(async (req, res, next) => {
 
 // Get all departments
 exports.getAllDepartments = catchAsync(async(req, res, next) => {
+    const Department = req.db.model('Department', departmentSchema);
+
     const departments = await Department.find();
     if(!departments) return next(new AppError(404, 'No departments found'));
 
@@ -36,6 +41,8 @@ exports.getAllDepartments = catchAsync(async(req, res, next) => {
 
 // Get department by Id
 exports.getDepartmentById = catchAsync(async (req, res, next) => {
+    const Department = req.db.model('Department', departmentSchema);
+
     // console.log(req.params);
     const department = await Department.findById(req.params.id);
     if(!department) return next(new AppError(404, 'No department with this id'));
@@ -56,6 +63,8 @@ exports.getDepartmentById = catchAsync(async (req, res, next) => {
 
 // Update a departament using id
 exports.updateDepartment = catchAsync(async(req, res, next) => {
+    const Department = req.db.model('Department', departmentSchema);
+
     if(!req.params.id) return next(new AppError(400, 'There are no department in your request'));
 
     const department = await  Department.findById(req.params.id);
@@ -71,6 +80,8 @@ exports.updateDepartment = catchAsync(async(req, res, next) => {
 
 // Delete a department
 exports.deleteDepartment = catchAsync(async(req, res, next) => {
+    const Department = req.db.model('Department', departmentSchema);
+
     if(!req.params.id) return next(new AppError(400, 'There are no department in your request'));
 
     const department = await Department.findById(req.params.id);

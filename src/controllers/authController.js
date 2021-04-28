@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 
-const Company = require('./../modules/companyModule');
-const User = require('../modules/userModule');
+// const Company = require('./../modules/companyModule');
+// const User = require('../modules/userModule');
+const companySchema = require('./../modules/companyModule');
+const userSchema = require('../modules/userModule');
 const sendMail = require('../utils/email');
 const {isPasswordEqualConfirmPassword, isPasswordMinLength,
 createCompanyId, hasUserRights} = require('./../utils/functions');
@@ -34,6 +36,7 @@ exports.signupCompany = catchAsync(async(req, res, next) => {
         return next(new AppError(400, 'Password should be at least 8 chars long'));
 
     const companyData = {
+        companyDB: 'hrflow1234',    // to be changed
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         businessEmail: req.body.businessEmail,
@@ -48,17 +51,32 @@ exports.signupCompany = catchAsync(async(req, res, next) => {
         address: req.body.address
     }
 
+    
+    const DB = req.databaseName.replace('<database_name>', companyData.companyDB);
+    console.log(DB);
+    const db = await mongoose.createConnection(DB, {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useFindAndModify: false,
+        useUnifiedTopology: true
+    });
+
+    const Company = db.model('Company', companySchema);
+
     const newCompany = await Company.create(companyData);
     if(!newCompany) return next('Company not registered!');
 
     req.company = newCompany;
     req.company.password = req.body.password;
     req.company.confirmPassword = req.body.confirmPassword;
+    req.db = db;
     next();
 });
 
 // sign up the admin
 exports.signUpAdmin = catchAsync(async (req, res, next) => {
+    const User = req.db.model('User', userSchema);
+
     const userData = {
         firstName: req.company.firstName,
         lastName: req.company.lastName,
@@ -93,6 +111,8 @@ exports.signUpAdmin = catchAsync(async (req, res, next) => {
 
 // LOG IN FUNCTION
 exports.login = async(req, res, next) => {
+    const User = req.db.model('User', userSchema);
+
     try {
         if(!req.body.email || !req.body.password) return next(new AppError(400, 'Please provide email and password!'));
         console.log(req.body);
@@ -119,6 +139,8 @@ exports.login = async(req, res, next) => {
 
 // check if user is logged in
 exports.protect = catchAsync(async(req, res, next) => {
+    const User = req.db.model('User', userSchema);
+
     if(!req.headers.authorization) return next(new AppError(401, 'You are not logged in'));
     
     let token;

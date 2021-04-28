@@ -177,6 +177,8 @@ userSchema.methods.checkPasswordModifiedAfterJWT = function(iatJWT) {
     return passwordChangedAt >= iatJWT;
 }
 
-const Model = mongoose.model('User', userSchema);
+// const Model = mongoose.model('User', userSchema);
 
-module.exports = Model;
+// module.exports = Model;
+
+module.exports = userSchema;

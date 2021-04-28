@@ -15,18 +15,18 @@ const server = app.listen(port, () => {
 // log the node environment
 console.log(process.env.NODE_ENV);
 
-let DB;
-if(process.env.NODE_ENV === 'development') {
-    DB = process.env.LOCAL_DB // change this after finish the app
-}else {
-    DB = process.env.LOCAL_DB
-}
+// let DB;
+// if(process.env.NODE_ENV === 'development') {
+//     DB = process.env.LOCAL_DB // change this after finish the app
+// }else {
+//     DB = process.env.LOCAL_DB
+// }
 
-mongoose.connect(DB, {  
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-    useUnifiedTopology: true
-}).then(() => {
-    console.log('Database has been connected...');
-});
+// mongoose.connect(DB, {  
+//     useNewUrlParser: true,
+//     useCreateIndex: true,
+//     useFindAndModify: false,
+//     useUnifiedTopology: true
+// }).then(() => {
+//     console.log('Database has been connected...');
+// });
