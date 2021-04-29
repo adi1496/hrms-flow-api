@@ -8,10 +8,6 @@ const salarySchema = require('./schemas/salarySchema');
 const functions = require('../utils/functions');
 
 const userSchema = new mongoose.Schema({
-    // companyId: {
-    //     type: mongoose.ObjectId,
-    //     ref: 'Companies'
-    // },
     // employeeID: {
     //     type: String,
     //     required: [true, 'Please provide employee ID'],
@@ -19,6 +15,10 @@ const userSchema = new mongoose.Schema({
     // department: {
     //     type: String
     // },
+    companyId: {
+        type: String,
+        required: [true, 'A user must belong to a company']
+    },
     firstName: {
         type: String,
         required: [true, 'Please provide first name'],

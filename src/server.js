@@ -30,3 +30,17 @@ console.log(process.env.NODE_ENV);
 // }).then(() => {
 //     console.log('Database has been connected...');
 // });
+
+
+let DB = process.env.LOCAL_DB;
+
+app.db = mongoose.connect(DB, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log('Cluster connected...');
+}).catch(err => {
+    console.log(err);
+});

@@ -23,6 +23,6 @@ const countryTaxesSchema = mongoose.Schema({
     ]
 });
 
-const CountryTaxes = mongoose.model('CountryTaxes', countryTaxesSchema);
+// const CountryTaxes = mongoose.model('CountryTaxes', countryTaxesSchema);
 
-module.exports = CountryTaxes;
+// module.exports = CountryTaxes;

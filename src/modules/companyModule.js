@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const companySchema = new mongoose.Schema({
+    companyId: {
+        type: String,
+        required: [true, 'A user must belong to a company']
+    },
     firstName: {
         type: String,
         required: [true, 'Please provide first name'],
@@ -31,10 +35,10 @@ const companySchema = new mongoose.Schema({
     companyLogo: {
         type: String
     },
-    numberOfEmployees: {
-        type: Number,
+    numberEmployees: {
+        type: String,
         required: [true, 'Please provide the number of employees'],
-        min: [1, 'The number of employees should be minimum 1']
+        enum: ['0-20', '20-100', '100-500', '500+']
     },
     country: {
         type: String,

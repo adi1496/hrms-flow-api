@@ -5,8 +5,6 @@ const authController = require('./../controllers/authController');
 
 const router = express.Router();
 
-router.use(authController.protect);
-
 router.route('/')
 .get(departmentController.getAllDepartments)
 .post(authController.restrictTo('admin'), departmentController.createNewDepartment);
