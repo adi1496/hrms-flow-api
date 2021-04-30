@@ -11,7 +11,7 @@ const sendErrorDevelopment = (err, req, res) => {
 }
 
 const sendErrorProduction = (err, req, res) => {
-    console.log(err);
+    // console.log(err);
     res.status(err.statusCode).json({
         status: err.status,
         message: err.message
@@ -28,11 +28,13 @@ module.exports = (err, req, res, next) => {
 
     // if node env is production return sendErrorProduction function
     if(process.env.NODE_ENV === 'production') {
-        // let error = {...err};
+        let error = {...err};
         // error = err.message;
         // console.log(err);
+        // console.log(error);
 
         if(err.name === "CastError") err = handleErr.handleCastErrorDB(err);
+        if(error.message === 'jwt malformed') err = handleErr.handleJWTMalformedErr(error);
 
         sendErrorProduction(err, req, res);
     }

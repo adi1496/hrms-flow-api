@@ -19,3 +19,5 @@ What is a HRMS: https://www.netsuite.com/portal/resource/articles/human-resource
 
 * Basic structure of a company database: https://dev.mysql.com/doc/employee/en/sakila-structure.html
 * A recruitment system arhitecture: https://www.vertabelo.com/blog/designing-a-database-for-a-recruitment-system/
+
+* CORS Cookies: https://stackoverflow.com/questions/46288437/set-cookies-for-cross-origin-requests

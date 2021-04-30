@@ -122,13 +122,16 @@ const userSchema = new mongoose.Schema({
         }
     ],
     bankName: {
-        type: String
+        type: String,
+        select: false
     },
     bankAccountName: {
-        type: String
+        type: String,
+        select: false
     },
     bankAccountNumber: {
-        type: String
+        type: String,
+        select: false
     },
     status: {
         type: String

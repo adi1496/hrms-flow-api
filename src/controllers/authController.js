@@ -66,6 +66,7 @@ const getCompanyDB = async(email) => {
 
 // sign up the company
 exports.signupCompany = catchAsync(async(req, res, next) => {
+    console.log('hey');
     if(!req.body) return next(new AppError(400, 'There is no data in the body'));
 
     if(!isPasswordEqualConfirmPassword(req.body.password, req.body.confirmPassword)) 
@@ -113,6 +114,7 @@ exports.signUpAdmin = catchAsync(async (req, res, next) => {
         firstName: req.company.firstName,
         lastName: req.company.lastName,
         email: req.company.businessEmail,
+        phone: req.company.businessPhone,
         password: req.company.password,
         confirmPassword: req.company.confirmPassword,
         userRole: 'admin',
@@ -157,13 +159,24 @@ exports.login = catchAsync(async(req, res, next) => {
     const User = db.model('User', userSchema);
 
     const user = await User.findOne({email: req.body.email}).select('+password');
-    if(!user) return next(new AppError(401, `The user or password is wrong`));
+    if(!user) return next(new AppError(400, `The user or password is wrong`));
 
     const isPasswordCorrect = await user.checkCandidatePassword(req.body.password);
-    if(isPasswordCorrect === false) return next(new AppError(401`The user or password is wrong`));
+    if(isPasswordCorrect === false) return next(new AppError(400, `The user or password is wrong`));
 
     const token = await createJWT(user._id, companyDB);
     if(!token) return next(new AppError(500, 'Could not create the token'));
+
+    // res.cookie('jwt', token, {
+    //     maxAge: 15 * 60 * 60 * 1000,
+    //     httpOnly: true,
+    // });
+
+    // res.set('Access-Control-Allow-Credentials', true);
+    // res.set('Access-Control-Allow-Origin', 'http://localhost:3000');
+    // res.set('Access-Control-Allow-Headers', 'Access-Control-Allow-Origin');
+
+    // console.log(res.headers);
 
     res.status(200).json({
         status: 'success',
@@ -193,7 +206,7 @@ exports.protect = catchAsync(async(req, res, next) => {
 
     // get user from users collection
     const user = await User.findById(dataToken.id);
-    if(!user) return next(new AppError(400, 'The token was malformed, please log in again'));
+    if(!user) return next(new AppError(401, 'The token was malformed, please log in again'));
 
     // check if the token expired
     if(dataToken.exp < Date.now()) return next(new AppError(401, 'Your sesion has expired, please log in again'));
@@ -206,11 +219,51 @@ exports.protect = catchAsync(async(req, res, next) => {
     next();
 });
 
+// check if client is logged
+exports.isLoggedIn = catchAsync(async(req, res, next) => {
+    if(!req.headers.authorization) return next(new AppError(401, 'You are not logged in'));
+    
+    let token;
+    if(req.headers.authorization.startsWith('Bearer')){
+        token = req.headers.authorization.split(' ')[1];
+    }
+    
+    
+    if(!token) return next(new AppError(401, 'There is no valid token, please login again'));
+    
+    const dataToken = await verifyJWT(token);
+    if(!dataToken) return next(new AppError(401, 'The token is incorrect, please log in again'));
+
+    const db = mongoose.connection.useDb(dataToken.companyId);
+    const User = db.model('User', userSchema);
+
+    // get user from users collection
+    const user = await User.findById(dataToken.id)
+        .select('-isActive -resume -contractPaper -idProof -otherDocuments -emailVerificationToken');
+    if(!user) return next(new AppError(401, 'The token was malformed, please log in again'));
+
+    // check if the token expired
+    if(dataToken.exp < Date.now()) return next(new AppError(401, 'Your sesion has expired, please log in again'));
+
+    // check if the password was changed before JWT was issued
+    const changedPasswordAfterJWT = user.checkPasswordModifiedAfterJWT(dataToken.iat);
+    if(changedPasswordAfterJWT === true) return next(new AppError(401, 'The password was recently changed, please log in again'));
+
+    // delete user.passwordChangedAt;
+    user.passwordChangedAt = undefined;
+    res.status(200).json({
+        status: 'success',
+        data: {
+            user: user
+        }
+    });
+});
+
 // restric access to users
 exports.restrictTo = (acceptedRoles) => {
     return (req, res, next) => {
         if(!hasUserRights(req.user.userRole, acceptedRoles)) 
-                        return next(new AppError(401, 'You do not have rights to access this'));
+                        return next(new AppError(403, 'You do not have rights to access this'));
 
         next();
     }
